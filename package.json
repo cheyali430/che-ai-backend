@@ -2,14 +2,15 @@
   "name": "che-ai-backend",
   "version": "1.0.0",
   "description": "DeepSeek AI Backend for Che Designer Portfolio",
-  "type": "module",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
-    "@types/node": "^20.11.0"
+    "@vercel/node": "^3.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.11.0",
     "typescript": "^5.3.3",
     "vercel": "^33.0.0"
   }
