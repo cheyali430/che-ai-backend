@@ -1,11 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 关键修复：显式处理 OPTIONS 预检请求
+  // 关键修正：必须手动处理浏览器的预检请求 (OPTIONS)
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(200).end(); 
   }
 
+  // 仅允许 POST 请求
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
