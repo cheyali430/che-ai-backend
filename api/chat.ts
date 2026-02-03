@@ -1,8 +1,9 @@
-// 1. 确保使用 Node.js 运行时
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+
 export const runtime = 'nodejs';
 
-export default async function handler(req: any, res: any) {
-  // 增加对 OPTIONS 请求的处理（这是解决 CORS 跨域的关键预检请求）
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // 处理浏览器的跨域预检请求
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -16,10 +17,9 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: 'Missing messages' });
   }
 
-  // 检查 API Key 是否真的读取到了
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'API Key not configured in Vercel' });
+    return res.status(500).json({ error: 'API Key not found in environment' });
   }
 
   try {
@@ -40,15 +40,8 @@ export default async function handler(req: any, res: any) {
     );
 
     const data = await response.json();
-    
-    // 如果 DeepSeek 返回了错误信息，也转发给前端，方便调试
-    if (!response.ok) {
-      return res.status(response.status).json(data);
-    }
-
     return res.status(200).json(data);
   } catch (err: any) {
-    console.error('Backend Error:', err);
-    return res.status(500).json({ error: err.message || 'DeepSeek request failed' });
+    return res.status(500).json({ error: 'DeepSeek request failed', details: err.message });
   }
 }
