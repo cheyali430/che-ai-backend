@@ -3,7 +3,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // ✅ 关键修正：添加 CORS 头部（必须在所有响应之前设置）
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', '*'); // 生产环境建议改为具体域名
+  res.setHeader('Access-Control-Allow-Origin', 'https://snake-cookie-69189738.figma.site'); 
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
