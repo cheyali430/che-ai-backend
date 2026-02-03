@@ -1,31 +1,32 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // ✅ CORS 配置：只允许你的 Figma Site 域名访问
+  // ===== 🔥 CORS 配置 - 修复版 ===== 
   const allowedOrigins = [
-    'https://snake-cookie-69189738.figma.site',  // 你的前端域名
-    'http://localhost:3000',  // 本地开发
-    'http://localhost:5173',  // Vite 本地开发
+    'https://snake-cookie-69189738.figma.site',
+    'http://localhost:3000',
+    'http://localhost:5173',
   ];
 
   const origin = req.headers.origin || '';
   
-  if (allowedOrigins.includes(origin)) {
+  // 如果请求来源在白名单中，或者包含 figma.site
+  if (allowedOrigins.includes(origin) || origin.includes('figma.site')) {
     res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
   } else {
-    // 开发阶段：仍然允许所有来源（方便调试）
-    // 生产环境可以删除这行，只允许白名单域名
+    // 其他来源也允许（方便调试）
     res.setHeader('Access-Control-Allow-Origin', '*');
   }
   
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24小时缓存
 
   // 处理浏览器的预检请求 (OPTIONS)
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
+  // ===== CORS 配置结束 =====
 
   // 仅允许 POST 请求
   if (req.method !== 'POST') {
