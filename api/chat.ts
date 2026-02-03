@@ -64,7 +64,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       console.error('❌ DeepSeek 错误响应:', errorText);
       
       // 尝试解析错误信息
-      let errorData;
+      let errorData: any;
       try {
         errorData = JSON.parse(errorText);
       } catch {
@@ -79,7 +79,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 5. 解析并返回成功响应
-    const data = await deepseekResponse.json();
+    const data: any = await deepseekResponse.json();
     console.log('✅ DeepSeek 调用成功');
     
     // 验证响应格式
