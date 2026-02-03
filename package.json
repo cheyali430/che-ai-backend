@@ -1,4 +1,14 @@
 {
   "name": "che-ai-backend",
-  "private": true
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.0"
+  },
+  "scripts": {
+    "start": "node api/chat.js"
+  }
 }
