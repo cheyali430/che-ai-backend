@@ -1,9 +1,24 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // ✅ 关键修正：添加 CORS 头部（必须在所有响应之前设置）
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Origin', 'https://snake-cookie-69189738.figma.site'); 
+  // ✅ CORS 配置：只允许你的 Figma Site 域名访问
+  const allowedOrigins = [
+    'https://snake-cookie-69189738.figma.site',  // 你的前端域名
+    'http://localhost:3000',  // 本地开发
+    'http://localhost:5173',  // Vite 本地开发
+  ];
+
+  const origin = req.headers.origin || '';
+  
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  } else {
+    // 开发阶段：仍然允许所有来源（方便调试）
+    // 生产环境可以删除这行，只允许白名单域名
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
