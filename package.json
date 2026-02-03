@@ -7,8 +7,5 @@
   },
   "dependencies": {
     "node-fetch": "^3.3.0"
-  },
-  "scripts": {
-    "start": "node api/chat.js"
   }
 }
