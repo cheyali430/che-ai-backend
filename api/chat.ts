@@ -1,34 +1,18 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // ===== 🔥 CORS 配置 - 修复版 ===== 
-  const allowedOrigins = [
-    'https://snake-cookie-69189738.figma.site',
-    'http://localhost:3000',
-    'http://localhost:5173',
-  ];
-
-  const origin = req.headers.origin || '';
-  
-  // 如果请求来源在白名单中，或者包含 figma.site
-  if (allowedOrigins.includes(origin) || origin.includes('figma.site')) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    // 其他来源也允许（方便调试）
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  
+  // ===== CORS 配置 - 必须在最前面 ===== 
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Max-Age', '86400'); // 24小时缓存
+  res.setHeader('Access-Control-Max-Age', '86400');
 
-  // 处理浏览器的预检请求 (OPTIONS)
+  // 处理 OPTIONS 预检请求
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  // ===== CORS 配置结束 =====
 
-  // 仅允许 POST 请求
+  // 只允许 POST 请求
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
