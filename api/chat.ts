@@ -1,9 +1,15 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 关键修正：必须手动处理浏览器的预检请求 (OPTIONS)
+  // ✅ 关键修正：添加 CORS 头部（必须在所有响应之前设置）
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*'); // 生产环境建议改为具体域名
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // 处理浏览器的预检请求 (OPTIONS)
   if (req.method === 'OPTIONS') {
-    return res.status(200).end(); 
+    return res.status(200).end();
   }
 
   // 仅允许 POST 请求
