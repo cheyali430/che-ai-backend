@@ -1,9 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export const runtime = 'nodejs';
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // 处理浏览器的跨域预检请求
+  // 关键修复：显式处理 OPTIONS 预检请求
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -19,25 +17,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const apiKey = process.env.DEEPSEEK_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: 'API Key not found in environment' });
+    return res.status(500).json({ error: 'API Key not configured' });
   }
 
   try {
-    const response = await fetch(
-      'https://api.deepseek.com/v1/chat/completions',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages,
-          temperature: 0.8,
-        }),
-      }
-    );
+    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages,
+        temperature: 0.8,
+      }),
+    });
 
     const data = await response.json();
     return res.status(200).json(data);
