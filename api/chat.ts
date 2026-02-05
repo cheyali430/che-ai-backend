@@ -37,7 +37,6 @@ const SYSTEM_PROMPT = `
 - 使用 <b> 和 <br/>。
 `;
 
-// ✅ 你原有的频率限制逻辑（完全不动）
 const RATE_LIMIT_WINDOW = 5 * 60 * 1000;
 const MAX_REQUESTS = 10;
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -46,7 +45,7 @@ export default async function handler(
   req: VercelRequest,
   res: VercelResponse
 ) {
-  // ✅ CORS headers（原样）
+  // ✅ CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -60,7 +59,6 @@ export default async function handler(
   }
 
   try {
-    // ===== 你原有的 rate limit（完全不动）=====
     const clientIP =
       (req.headers["x-forwarded-for"] as string)?.split(",")[0] ||
       req.socket.remoteAddress ||
@@ -117,7 +115,6 @@ export default async function handler(
 
     const data = await response.json();
 
-    // 🆕 新增：非阻塞写入 Supabase（失败也不影响返回）
     try {
       const lastUserMsg = [...messages]
         .reverse()
